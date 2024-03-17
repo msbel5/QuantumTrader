@@ -1,0 +1,163 @@
+﻿@using Newtonsoft.Json
+@{
+    ViewData["Title"] = "Binance Trading Dashboard";
+    var result = TempData["result"]?.ToString();
+
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css">
+    <link href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 20px;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+        .card-header {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .tree-item::before {
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            margin-right: 5px;
+        }
+        .tree-item.collapsed::before {
+            content: "\f068"; /* minus-square */
+        }
+        .tree-item:not(.collapsed)::before {
+            content: "\f067"; /* plus-square */
+        }
+        .tree-value {
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 5px;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+        .error {
+            color: #dc3545; /* Bootstrap danger color */
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>@ViewData["Title"]</h1>
+    <div id="jsonTree" class="tree-view table"></div>
+</div>
+
+
+<script>
+    const data = @Html.Raw(result ?? "{}");
+
+    parseJsonProperties(data);
+
+    // processJsonStrings(data)
+
+
+    function parseJsonProperties(obj) {
+        // Iterate through each property of the object
+        Object.keys(obj).forEach(key => {
+            try {
+                // Attempt to parse the property value as JSON
+                const parsedValue = JSON.parse(obj[key]);
+                obj[key] = parsedValue;
+                // Recursively process the parsed object or array
+                parseJsonProperties(obj[key]);
+            } catch (e) {
+                // If parsing throws an error, the value is not a JSON string,
+                // so check if it's an object or array and recursively process it
+                if (typeof obj[key] === 'object' && obj[key] !== null) {
+                    parseJsonProperties(obj[key]);
+                }
+                // If it's not an object or JSON string, do nothing
+            }
+        });
+    }
+
+
+    function processJsonStrings(obj) {
+        if (typeof obj === 'object' && obj !== null) {
+            Object.keys(obj).forEach(key => {
+                obj[key] = processJsonStrings(obj[key]); // Recursively process each property
+            });
+            return obj;
+        } else if (typeof obj === 'string') {
+            // Replace \r and \n in strings
+            return obj.replace(/\r/g, ' ').replace(/\n/g, ' ');
+        } else {
+            // Return as is if not an object or string
+            return obj;
+        }
+    }
+
+
+        function toggleCollapse(event) {
+        const branch = event.currentTarget.nextElementSibling;
+        if (branch.style.display === "none") {
+            branch.style.display = "block";
+            event.currentTarget.classList.add("collapsed");
+        } else {
+            branch.style.display = "none";
+            event.currentTarget.classList.remove("collapsed");
+        }
+    }
+
+    function createBranch(key, value) {
+        const item = document.createElement("button");
+        item.className = "tree-item accordion-button";
+        item.id = "accordion-button " + key;
+        const keySpan = document.createElement("span");
+        keySpan.className = "tree-key col";
+        keySpan.textContent = key;
+
+        item.appendChild(keySpan);
+
+        const branch = document.createElement("div");
+        branch.className = "tree-branch col";
+        branch.id = "tree-branch " + key;
+        branch.style.display = "none";
+
+        if (typeof value === "object" && value !== null) {
+            item.onclick = toggleCollapse;
+            for (const [childKey, childValue] of Object.entries(value)) {
+                branch.appendChild(createBranch(childKey, childValue));
+            }
+        } else {
+            const valueSpan = document.createElement("span");
+            valueSpan.textContent = value;
+            valueSpan.className = "tree-value col";
+            if (typeof value === "string" && value.startsWith("Failed")) {
+                valueSpan.classList.add("error");
+            }
+            item.appendChild(valueSpan);
+            item.classList.remove("tree-item"); // Remove click if it's a value
+        }
+
+        const container = document.createElement("div");
+        container.appendChild(item);
+        container.appendChild(branch);
+        return container;
+    }
+
+    function buildTree(data) {
+        const treeRoot = document.getElementById("jsonTree");
+        for (const [key, value] of Object.entries(data)) {
+            treeRoot.appendChild(createBranch(key, value));
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => buildTree(data));
+</script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
