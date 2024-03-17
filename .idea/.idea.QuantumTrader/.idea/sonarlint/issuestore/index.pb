@@ -87,3 +87,5 @@ S
 #QuantumTrader/Models/BalanceInfo.cs,9\5\956b099459b630f6304a667577cd9f8dedbf419e
 `
 0QuantumTrader/ViewModels/AccountInfoViewModel.cs,6\0\600aa1661421a10d78ab12ee2401e822c11978a5
+l
+<QuantumTrader/obj/Debug/net8.0/QuantumTrader.AssemblyInfo.cs,d\2\d2cbf061ca42f2d8d673dcf255f0b091e2b5160c

@@ -17,6 +17,7 @@ public class HomeController : Controller
     private string _Uid = "1710615495884876000";
     private string _symbol = "BTCUSDT";
     private readonly long _orderId = 1360372;
+    private readonly long _orderListId = 0;
 
 
     public HomeController(ILogger<HomeController> logger, BinanceSpotAccountTradeService binanceSpotAccountTradeService)
@@ -25,6 +26,19 @@ public class HomeController : Controller
         _binanceSpotAccountTradeService = binanceSpotAccountTradeService;
     }
 
+    private async Task<string> getClientOrderId()
+    {
+        var newOrderResponse = await _binanceSpotAccountTradeService.NewOrder(_symbol, Side.SELL, OrderType.MARKET, 0.0001m);
+
+        // Deserialize the JSON response to a dynamic object
+        dynamic responseObject = JsonConvert.DeserializeObject(newOrderResponse);
+
+        // Extract the clientOrderId from the dynamic object
+        string clientOrderId = responseObject.clientOrderId;
+
+        return clientOrderId;
+
+    }
 
     private  async Task<string> SpotAccountTradeServicesAsJson()
     {
@@ -33,19 +47,20 @@ public class HomeController : Controller
         //string builder
         var checkServerTime = await _binanceSpotAccountTradeService.CheckServerTime();
         var accountInfo = await _binanceSpotAccountTradeService.GetAccountInformation();
-        var newOco = await _binanceSpotAccountTradeService.NewOco(_symbol, Side.SELL, (decimal)0.1, 400.15m, 390.3m);
-        var newOrder = await _binanceSpotAccountTradeService.NewOrder(_symbol,  Side.BUY, OrderType.MARKET,0.1m);
+        var newOco = await _binanceSpotAccountTradeService.NewOco("LTCBTC", Side.SELL, (decimal)0.1, 400.15m, 390.3m);
+        var newOrder = await _binanceSpotAccountTradeService.NewOrder(_symbol,  Side.SELL, OrderType.MARKET,0.0001m);
         var testNewOrder = await _binanceSpotAccountTradeService.TestNewOrder(_symbol, 0.1m, Side.BUY, OrderType.MARKET);
-        var queryOco = await _binanceSpotAccountTradeService.QueryOco(_accountUid);
+        var queryOco = await _binanceSpotAccountTradeService.QueryOco(_orderListId);
         var queryAllOco = await _binanceSpotAccountTradeService.QueryAllOco();
         var queryOpenOco = await _binanceSpotAccountTradeService.QueryOpenOco();
         var queryOrder = await _binanceSpotAccountTradeService.QueryOrder(_symbol , _orderId);
         var queryCurrentOrderCountUsage = await _binanceSpotAccountTradeService.QueryCurrentOrderCountUsage();
         var currentAllOpenOrders = await _binanceSpotAccountTradeService.CurrentOpenOrders(_symbol);
         var trades = await _binanceSpotAccountTradeService.AccountTradeList(_symbol);
-        var cancelAnExistingOrderAndSendANewOrder = await _binanceSpotAccountTradeService.CancelAnExistingOrderAndSendANewOrder(_symbol , Side.SELL,  OrderType.MARKET, "STOP_ON_FAILURE" , _accountUid, _accountUid , _accountUid );
+        var cancelAnExistingOrderAndSendANewOrder = await _binanceSpotAccountTradeService.CancelAnExistingOrderAndSendANewOrder(_symbol , Side.SELL,  OrderType.MARKET, "STOP_ON_FAILURE" , _accountUid, _accountUid , _accountUid, quantity:0.001m );
         var cancelOrder = await _binanceSpotAccountTradeService.CancelOrder(_symbol, _accountUid, _accountUid);
-        var cancelOco = await _binanceSpotAccountTradeService.CancelOCO(_symbol, _accountUid, _accountUid);
+        var cancelOco = await _binanceSpotAccountTradeService.CancelOCO(_symbol, _orderListId);
+        var openOrder = await getClientOrderId();
         var cancelAllOpenOrdersOnASymbol = await _binanceSpotAccountTradeService.CancelAllOpenOrdersOnASymbol(_symbol);
         var allOrders = await _binanceSpotAccountTradeService.AllOrders(_symbol);
 

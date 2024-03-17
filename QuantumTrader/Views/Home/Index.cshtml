@@ -13,44 +13,45 @@
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css">
     <link href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" rel="stylesheet">
-    <style>
-        body {
-            padding-top: 20px;
-        }
-        .card {
-            margin-bottom: 20px;
-        }
-        .card-header {
-            font-size: 20px;
-            font-weight: bold;
-        }
-        .tree-item::before {
-            font-family: 'Font Awesome 5 Free';
-            font-weight: 900;
-            margin-right: 5px;
-        }
-        .tree-item.collapsed::before {
-            content: "\f068"; /* minus-square */
-        }
-        .tree-item:not(.collapsed)::before {
-            content: "\f067"; /* plus-square */
-        }
-        .tree-value {
-            background-color: #f8f9fa;
-            border: 1px solid #ddd;
-            padding: 5px;
-            border-radius: 5px;
-            margin-top: 5px;
-        }
-        .error {
-            color: #dc3545; /* Bootstrap danger color */
-        }
-    </style>
+<style>
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .data-table, .data-table th, .data-table td {
+        border: 1px solid #ddd;
+    }
+    .data-table th, .data-table td {
+        padding: 8px;
+        text-align: left;
+    }
+    .data-table th {
+        background-color: #f2f2f2;
+    }
+    .tree-indent {
+        padding-left: 20px;
+    }
+    .tree-control {
+        cursor: pointer;
+    }
+    .error-text {
+        color: #dc3545;
+    }
+</style>
+
 </head>
 <body>
 <div class="container">
     <h1>@ViewData["Title"]</h1>
-    <div id="jsonTree" class="tree-view table"></div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                </tr>
+        </thead>
+        <tbody id="jsonTree">
+
+        </tbody>
+    </table>
 </div>
 
 

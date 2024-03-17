@@ -135,3 +135,4 @@ C:\Users\msbel\RiderProjects\QuantumTrader\QuantumTrader\bin\Debug\net8.0\Common
 C:\Users\msbel\RiderProjects\QuantumTrader\QuantumTrader\bin\Debug\net8.0\Spot.dll
 C:\Users\msbel\RiderProjects\QuantumTrader\QuantumTrader\bin\Debug\net8.0\package-lock.json
 C:\Users\msbel\RiderProjects\QuantumTrader\QuantumTrader\bin\Debug\net8.0\package.json
+C:\Users\msbel\RiderProjects\QuantumTrader\QuantumTrader\obj\Debug\net8.0\QuantumTrader.sourcelink.json

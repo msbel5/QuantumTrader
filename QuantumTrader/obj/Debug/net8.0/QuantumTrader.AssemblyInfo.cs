@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("QuantumTrader")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e174c135c3e3e829c924b45c75c0a2702e2b9ce2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d6fd754746ea3e926963a58a1076d1407fc77cc7")]
 [assembly: System.Reflection.AssemblyProductAttribute("QuantumTrader")]
 [assembly: System.Reflection.AssemblyTitleAttribute("QuantumTrader")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

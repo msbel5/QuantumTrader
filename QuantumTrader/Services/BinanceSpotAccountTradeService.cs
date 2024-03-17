@@ -129,18 +129,19 @@ public class BinanceSpotAccountTradeService
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Failed to cancel all open orders on a symbol");
-            return "Failed to cancel all open orders on a symbol" + e;
+            // If possible, log the response from Binance to get more details on the error.
+            _logger.LogError(e, $"Failed to cancel all open orders on a symbol. Details: {e.Message}");
+            return $"Failed to cancel all open orders on a symbol: {e.Message}";
         }
     }
 
     // CancelAnExistingOrderAndSendANewOrder
-    public async Task<string> CancelAnExistingOrderAndSendANewOrder(string symbol,Side side, OrderType orderType, string cancelReplaceMode, string cancelNewClientOrderId, string cancelOrigClientOrderId, string newClientOrderId )
+    public async Task<string> CancelAnExistingOrderAndSendANewOrder(string symbol,Side side, OrderType orderType, string cancelReplaceMode, string cancelNewClientOrderId, string cancelOrigClientOrderId, string newClientOrderId, decimal quantity )
     {
         try
         {
             var spotAccountTrade = SpotAccountTrade();
-            var result = await spotAccountTrade.CancelAnExistingOrderAndSendANewOrder(symbol, side: side, orderType, cancelReplaceMode: cancelReplaceMode, cancelNewClientOrderId: cancelNewClientOrderId, cancelOrigClientOrderId: cancelOrigClientOrderId, newClientOrderId: newClientOrderId  );
+            var result = await spotAccountTrade.CancelAnExistingOrderAndSendANewOrder(symbol, side: side, orderType, cancelReplaceMode: cancelReplaceMode, cancelNewClientOrderId: cancelNewClientOrderId, cancelOrigClientOrderId: cancelOrigClientOrderId, newClientOrderId: newClientOrderId, quantity: quantity);
             return result;
         }
         catch (Exception e)
@@ -152,17 +153,17 @@ public class BinanceSpotAccountTradeService
 
 
     // CancelOco
-    public async Task<string> CancelOCO(string symbol, string listClientOrderId , string newClientOrderId)
+    public async Task<string> CancelOCO(string symbol, long orderListId )
     {
         try
         {
             var spotAccountTrade = SpotAccountTrade();
-            var result = await spotAccountTrade.CancelOco(symbol, listClientOrderId: listClientOrderId, newClientOrderId: newClientOrderId);
+            var result = await spotAccountTrade.CancelOco(symbol, orderListId: orderListId);
             return result;
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Failed to cancel an existing order and send a new order");
+            _logger.LogError(e, "Failed to cancel OCO");
             return "Failed to cancel an existing OCO " + e;
         }
     }
@@ -201,6 +202,7 @@ public class BinanceSpotAccountTradeService
     }
 
 
+
     // NewOco
     public async Task<string> NewOco(string symbol, Side side, decimal quantity, decimal price, decimal stopPrice)
     {
@@ -212,12 +214,12 @@ public class BinanceSpotAccountTradeService
         }
         catch (BinanceClientException bcEx)
         {
-            _logger.LogError(bcEx, "BinanceClientException in NewOco: {Message}", bcEx.Message);
+            _logger.LogError(bcEx, "BinanceClientException in NewOco2: {Message}", bcEx.Message);
             return $"BinanceClientException: {bcEx.Message}";
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to create a new OCO");
+            _logger.LogError(ex, "Failed to create a new OCO2");
             return $"Exception: {ex.Message}";
         }
     }
@@ -279,13 +281,13 @@ public class BinanceSpotAccountTradeService
     }
 
     // QueryOco
-    public async Task<string> QueryOco(string origClientOrderId)
+    public async Task<string> QueryOco(long orderListId)
     {
         try
         {
             var spotAccountTrade = SpotAccountTrade();
             // Assuming the SDK method only needs orderListId and origClientOrderId.
-            var result = await spotAccountTrade.QueryOco( origClientOrderId: origClientOrderId);
+            var result = await spotAccountTrade.QueryOco( orderListId: orderListId );
             return result;
         }
         catch (Exception e)
