@@ -1,3 +1,3 @@
 ﻿<Project>
-  <Import Project="..\buildMultiTargeting\QuantumTrader.props" />
+  <Import Project="../buildMultiTargeting/QuantumTrader.props" />
 </Project>

@@ -146,4 +146,8 @@ public class HomeController : Controller
     }
 
     // Controller actions follow...
+    public IActionResult Privacy()
+    {
+        throw new NotImplementedException();
+    }
 }
